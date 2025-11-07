@@ -148,8 +148,8 @@ class ProductVectorStore:
                 outputs = self.encoder(**inputs)
                 # Use [CLS] token embedding (first token)
                 embedding = outputs.last_hidden_state[:, 0].cpu().numpy()
-            
-            return np.append(embedding.flatten(), 0.0)
+            return embedding.flatten()
+            # return np.append(embedding.flatten(), 0.0)
             
         except Exception as e:
             logger.error(f"Failed to encode text: {e}")

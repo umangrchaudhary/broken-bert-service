@@ -33,7 +33,7 @@ class ReviewClassifier:
         """
         # Set device
         if device is None:
-            self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+            self.device = torch.device('mps' if torch.mps.is_available() else 'cpu') # updated for m1
         else:
             self.device = torch.device(device)
         
@@ -114,16 +114,16 @@ class ReviewClassifier:
         input_ids = encoding['input_ids'].to(self.device)
         attention_mask = encoding['attention_mask'].to(self.device)
         
-            outputs = self.model(input_ids, attention_mask)
-            
-            # Apply softmax to get probabilities
-            probabilities = F.softmax(outputs, dim=1)
-            
-            # Get the predicted class and confidence
-            confidence, predicted_class = torch.max(probabilities, dim=1)
-            
-            predicted_label = self.label_map[predicted_class.item()]
-            confidence_score = confidence.item()
+        outputs = self.model(input_ids, attention_mask)
+
+        # Apply softmax to get probabilities
+        probabilities = F.softmax(outputs, dim=1)
+
+        # Get the predicted class and confidence
+        confidence, predicted_class = torch.max(probabilities, dim=1)
+
+        predicted_label = self.label_map[predicted_class.item()]
+        confidence_score = confidence.item()
         
         return predicted_label, confidence_score
     

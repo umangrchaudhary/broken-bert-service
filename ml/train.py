@@ -172,7 +172,14 @@ def train_model(csv_path: str = 'assets/reviews.csv',
         Training history dictionary
     """
     # Set device
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    # device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    # udpate for m1 # todo : by uc
+    if torch.backends.mps.is_available() and torch.backends.mps.is_built():
+        device = torch.device('mps')
+    elif torch.cuda.is_available():
+        device = torch.device('cuda')
+    else:
+        device = torch.device('cpu')
     print(f"Using device: {device}")
     
     # Load tokenizer
